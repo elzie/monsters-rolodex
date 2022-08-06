@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import CardList from './components/card-list/card-list.component';
 import './App.css';
 import SearchBox from './components/search-box/search-box.component';
@@ -9,16 +9,46 @@ import SearchBox from './components/search-box/search-box.component';
 // There are no life-cycles when it comes to functional components. Functions, pure functions, impure-functions and side-effects.
 
 const App = () => {
+  // State
+  const [searchField, setSearchField] = useState(''); // [value, setValue]
+  const [monsters, setMonsters] = useState([]);
+  const [filteredMonsters, setFilteredMonsters] = useState(monsters);
+
+  const onSearchChange = (e) => {
+    const searchFieldString = e.target.value.toLocaleLowerCase();
+    setSearchField(searchFieldString);
+  };
+  useEffect(() => {
+    // API Call
+    fetch('https://jsonplaceholder.typicode.com/users')
+      .then((response) => response.json())
+      .then((users) => setMonsters(users));
+    console.log('fetch fired');
+  }, []);
+  // ^^^ when any values inside this dependency-array changes, im going to run the prior call-back-function
+  // nothing in the array, makes sure that the fetch-function only runs once.
+  useEffect(() => {
+    const newFilteredMonsters = monsters.filter((monster) => {
+      //if the name includes the searched value, return true
+      // .includes is not case-sensitive, which is why we lowerCase all text typed in
+      return monster.name.toLocaleLowerCase().includes(searchField);
+    });
+    // useEffect is used again, to make sure that filteredMonsters does not run everytime the script runs.
+    setFilteredMonsters(newFilteredMonsters);
+  }, [monsters, searchField]);
+  // filter thru monsters either when monsters-array changes - OR when the searchfield changes.
+
   return (
     <div className="App">
       <h1 className="app-title">Elzies Monsters Rolodex</h1>
-      {/*
+
       <SearchBox
         onChangeHandler={onSearchChange}
         placeholder="Search Monsters"
         className="search-box"
       />
-      <CardList monsters={filteredMonsters}></CardList> */}
+
+      <CardList monsters={filteredMonsters}></CardList>
     </div>
   );
 };

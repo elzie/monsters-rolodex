@@ -3,28 +3,27 @@ import './card-list.styles.css';
 
 import Card from '../card/card.component';
 
-class CardList extends Component {
-  render() {
-    const { monsters } = this.props;
+// class CardList extends Component {
+//   render() {
+//     const { monsters } = this.props;
 
-    return (
-      <div className="card-list">
-        {monsters.map((monster) => (
-          <Card key={monster.id} monster={monster} />
-        ))}
-      </div>
-    );
-  }
-}
+//     return (
+//       <div className="card-list">
+//         {monsters.map((monster) => (
+//           <Card key={monster.id} monster={monster} />
+//         ))}
+//       </div>
+//     );
+//   }
+// }
+
+const CardList = ({ monsters }) => (
+  // console.log(props);
+  <div className="card-list">
+    {monsters.map((monster) => (
+      <Card key={monster.id} monster={monster} />
+    ))}
+  </div>
+);
 
 export default CardList;
-// export const CardList = (props) => {
-//   // console.log(props);
-//   return (
-//     <div className="card-list">
-//       {props.monsters.map((monster) => (
-//         <Card key={monster.id} monster={monster} />
-//       ))}
-//     </div>
-//   );
-// };
